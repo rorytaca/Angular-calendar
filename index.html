@@ -1,0 +1,88 @@
+<!doctype html>
+<html ng-app="calendar">
+<head>
+	<link href='http://fonts.googleapis.com/css?family=Alegreya+Sans+SC' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" type="text/css" href="css/main.css">
+	<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+	<script src="https://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+	 <script src="js/underscore-min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.7/angular.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.7/angular-resource.min.js"></script>
+
+	<!--<script src="js/app.js"></script> -->
+	 <script src="js/calendar.js"></script>
+</head>
+<body>	
+	<div id="main-wrapper" ng-controller="CalendarCtrl">
+		<header>
+			<div id="left-arrow" ng-click="changeMonth(-1)">-</div>
+			<h1>{{current.month}}</h1>
+			<h3>{{current.year}}</h3>
+			<div id="right-arrow" ng-click="changeMonth(1)">+</div>
+			<nav>
+				<a href="#" ng-click="loginState = !loginState; signupState = false">log in</a>
+				<a href="#" ng-click="signupState = !signupState; loginState = false ">sign up</a>
+			</nav>
+		</header>
+
+		<div id="login-form" ng-show="loginState" draggable>
+			<h4>Sign in</h4><span class="x" ng-click="loginState = false">x</span>
+			<form name="userForm" ng-submit="submitForm()" novalidate>
+				<label>E-Mail Adress</label>
+				<input type="email" name="email" ng-model="username" required><br>
+				<p class="warning" ng-show="userForm.email.$dirty && userForm.email.$invalid ">Not a valid e-mail adress</p>
+				<label>Password</label>
+				<input ng-model="user.password" type="password" name="password" required>
+				<p class="warning" ng-show="userForm.password.$dirty && userForm.password.$invalid ">Please type your password</p>
+				<input class="submit-btn" type="submit" value="sign in" ng-disabled="userForm.$invalid">
+			</form>
+		</div>
+		
+		<div id="signup-form" ng-show="signupState" draggable>
+			<h4>Register an Account</h4><span class="x" ng-click="signupState = false">x</span>
+			<form name="userForm" ng-submit="submitForm()" novalidate>
+				<label>E-Mail Adress</label>
+				<input type="email" name="email" ng-model="username" required><br>
+				<p class="warning" ng-show="userForm.email.$dirty && userForm.email.$invalid ">Not a valid e-mail adress</p>
+				
+				<label>Password</label>
+				<input ng-model="user.password" type="password" name="password" required>
+					
+				<label>Confirm Password</label>
+				<input ng-model="user.passwordConfirm" type="password" data-match="user.password" name="myConfirmField">
+				
+				<img id="pw-confirm" src="img/right.png" alt="match" ng-show="!userForm.myConfirmField.$error.match && user.passwordConfirm != null"/>
+				
+				<p class="warning" ng-show="userForm.myConfirmField.$error.match">Passwords do not match!</p>
+				<p>Want to share your calendar accross multiple-devices? Sign up and create an account today, and you can access your
+				   calendar from anywhere!
+				</p>
+				<input class="submit-btn" type="submit" value="sign up" ng-disabled="userForm.$invalid || userForm.myConfirmField.$error.match">
+			</form>
+			
+		</div>
+
+		<div >
+			<div id="calendar-wrapper">
+				<div ng-repeat="date in dates track by $index">
+					<a href="#" ng-click="dateOverlayState = true; dateboxClick()">
+						<span class="date-box {{date.class}}">
+							<span class="date">{{date.date}} {{date.holiday}}</span>
+							<span class="notifications">{{date.notifications}}</span>
+						</span>
+						<div class="date-overlay" ng-show="dateOverlayState" draggable>
+							<h5>{{current.month}} {{date.date}}, <span class="yr">{{current.year}}</span></h5>
+							<a href="#" type="button" class="x" ng-click="dateOverlayState = false">x</a>
+							<div id="todo-list">
+								
+							</div>
+							<button class="add-btn">
+						</div>
+					</a>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</body>
+</html>
